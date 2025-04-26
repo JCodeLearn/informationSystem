@@ -1,6 +1,6 @@
 package informationSystem.mapper;
 
-import informationSystem.pojo_.User;
+import informationSystem.pojo.User;
 
 import java.util.Map;
 

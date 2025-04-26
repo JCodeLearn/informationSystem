@@ -1,4 +1,4 @@
-package informationSystem.pojo_;
+package informationSystem.pojo;
 
 public class User {
     private int id;
