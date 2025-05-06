@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="informationSystem.mapper.AttachmentMapper">
+
+   <insert id = "insertAttachment" useGeneratedKeys="true" keyProperty="id">
+      insert into Attachments(email_id, file_name, file_type, file_data)
+         values(#{emailId}, #{fileName}, #{fileType}, #{fileData})
+   </insert>
+
+   <select id="findByEmailId" resultType="informationSystem.pojo.Attachment">
+      select id, email_id emailId, file_name fileName, file_type fileType, file_data fileData, upload_time uploadTime
+      from Attachments
+      where email_id = #{emailId}
+   </select>
+
+   <select id="findById" resultType="informationSystem.pojo.Attachment">
+      select id, email_id emailId, file_name fileName, file_type fileType, file_data fileData, upload_time uploadTime
+      from Attachments
+      where id = #{id}
+   </select>
+
+
+</mapper>
