@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="informationSystem.mapper.EmailMapper">
+
+    <insert id="insertEmail" useGeneratedKeys="true" keyProperty="id">
+        insert into Emails(sender_id, receiver_id, subject, content, status)
+            values(#{senderId}, #{receiverId}, #{subject}, #{content}, #{status})
+    </insert>
+
+    <select id="getEmailById" resultType="informationSystem.pojo.Email">
+        select a.id id, a.sender_id senderId, a.receiver_id receiverId, a.subject subject, a.content content, a.send_time sendTime, a.is_read IsRead, a.status status, b.username receiverUsername, c.username senderUsername
+        from Emails a, Users b, Users c
+        where a.id = #{id} and a.receiver_id = b.id and a.sender_id  = c.id
+    </select>
+
+    <select id="getEmailsBySenderAndStatus" resultType="informationSystem.pojo.Email">
+        select a.id id, sender_id senderId, receiver_id receiverId, subject, content, send_time sendTime, username receiverUsername
+        from Emails a, Users b
+        where sender_id = #{senderId} and status = #{status} and receiver_id = b.id
+        order by send_time desc
+    </select>
+
+</mapper>

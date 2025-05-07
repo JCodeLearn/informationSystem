@@ -1,0 +1,12 @@
+/home/code-j/data/informationSystem/mailProject/src/main/java/informationSystem/AvatarServlet.java
+/home/code-j/data/informationSystem/mailProject/src/main/java/informationSystem/ComposeServlet.java
+/home/code-j/data/informationSystem/mailProject/src/main/java/informationSystem/LoginServlet.java
+/home/code-j/data/informationSystem/mailProject/src/main/java/informationSystem/mapper/AttachmentMapper.java
+/home/code-j/data/informationSystem/mailProject/src/main/java/informationSystem/mapper/EmailMapper.java
+/home/code-j/data/informationSystem/mailProject/src/main/java/informationSystem/mapper/UserMapper.java
+/home/code-j/data/informationSystem/mailProject/src/main/java/informationSystem/pojo/Attachment.java
+/home/code-j/data/informationSystem/mailProject/src/main/java/informationSystem/pojo/Email.java
+/home/code-j/data/informationSystem/mailProject/src/main/java/informationSystem/pojo/User.java
+/home/code-j/data/informationSystem/mailProject/src/main/java/informationSystem/service/AttachmentService.java
+/home/code-j/data/informationSystem/mailProject/src/main/java/informationSystem/service/EmailService.java
+/home/code-j/data/informationSystem/mailProject/src/main/java/informationSystem/service/UserService.java

@@ -1,0 +1,12 @@
+informationSystem/mapper/EmailMapper.class
+informationSystem/pojo/User.class
+informationSystem/service/EmailService.class
+informationSystem/LoginServlet.class
+informationSystem/mapper/AttachmentMapper.class
+informationSystem/AvatarServlet.class
+informationSystem/pojo/Email.class
+informationSystem/mapper/UserMapper.class
+informationSystem/service/UserService.class
+informationSystem/pojo/Attachment.class
+informationSystem/ComposeServlet.class
+informationSystem/service/AttachmentService.class

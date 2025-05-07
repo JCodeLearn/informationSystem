@@ -78,5 +78,13 @@ public class EmailService {
         session.close();
         return email;
     }
+
+    public List<Email> getSentEmails(int senderId) {
+        SqlSession session = sqlSessionFactory.openSession(true);
+        EmailMapper mapper = session.getMapper(EmailMapper.class);
+        List<Email> emails = mapper.getEmailsBySenderAndStatus(senderId, "sent");
+        session.close();
+        return emails;
+    }
 }
 
