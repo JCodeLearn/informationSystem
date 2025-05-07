@@ -200,12 +200,12 @@
                     </div>
                     收件箱
                 </li>
-                <li class="nav-item" data-target="history">
-                    <div class="picture-box">
-                        <img src="images/history.jpeg">
-                    </div>
-                    历史邮件
-                </li>
+               <li class="nav-item" data-target="draft">
+                                   <div class="picture-box">
+                                       <img src="images/history.jpeg" alt="草稿箱图标">
+                                   </div>
+                                   草稿箱
+               </li>
                 <li class="nav-item" data-target="sent">
                     <div class="picture-box">
                         <img src="images/beenDistributed.jpeg">
@@ -265,20 +265,20 @@
 
         // 动态加载内容
         function loadContent(target) {
-            const contentPane = document.getElementById('contentPane');
+                const contentPane = document.getElementById('contentPane');
 
-            // 显示加载状态
-            contentPane.innerHTML = '<div class="loading">加载中...</div>';
+                // 显示加载状态
+                contentPane.innerHTML = '<div class="loading">加载中...</div>';
 
-            // 使用Fetch API获取内容
-            fetch(`/mail?action=${target}`)
-                .then(response => response.text())
-                .then(html => {
-                    contentPane.innerHTML = html;
-                })
-                .catch(error => {
-                    contentPane.innerHTML = `<div class="error">内容加载失败</div>`;
-                });
+                // 使用Fetch API获取内容
+                fetch('/mail?action=' + target)
+                    .then(response => response.text())
+                    .then(html => {
+                        contentPane.innerHTML = html;
+                    })
+                    .catch(error => {
+                        contentPane.innerHTML = `<div class="error">内容加载失败</div>`;
+                    });
         }
     </script>
 </body>

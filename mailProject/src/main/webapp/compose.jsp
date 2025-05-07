@@ -138,6 +138,70 @@
             border-radius: 4px;
             cursor: pointer;
         }
+
+        /* 用户信息 */
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* 主体布局 */
+        .main-container {
+            display: grid;
+            grid-template-columns: var(--sidebar-width) 1fr;
+            min-height: calc(100vh - var(--header-height));
+        }
+
+        /* 左侧导航 */
+        .sidebar {
+            background: white;
+            padding: 1.5rem;
+            border-right: 1px solid #e0e0e0;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .nav-item:hover {
+            background: #f5f7fa;
+        }
+
+        .nav-item.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* 右侧内容区 */
+        .content-area {
+            padding: 2rem;
+            background: #f8f9fa;
+        }
+
+        .content-pane {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            min-height: 80vh;
+        }
     </style>
 </head>
 <body>
