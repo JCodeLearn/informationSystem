@@ -2,7 +2,7 @@ package informationSystem.mapper;
 
 
 import java.util.Map;
-import informationSystem.pojo.*;
+import informationSystem.pojo.User;
 
 public interface UserMapper {
     User findByUsername(String username);

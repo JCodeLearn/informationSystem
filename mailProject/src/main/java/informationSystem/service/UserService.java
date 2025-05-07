@@ -121,4 +121,14 @@ public class UserService {
         }
     }
 
+    //通过名字来查找User
+    public User findByUsername(String username) {
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            UserMapper mapper = session.getMapper(UserMapper.class);
+            User findUser = mapper.findByUsername(username);
+            session.close();
+            return findUser;
+        }
+    }
+
 }

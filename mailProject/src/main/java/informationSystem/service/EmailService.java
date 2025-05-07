@@ -46,7 +46,7 @@ public class EmailService {
         emailMapper.insertEmail(email);
 
         //处理附件
-        for(Attachment attachment : attachments) {
+        for (Attachment attachment : attachments) {
             attachment.setEmailId(email.getId());
             attachmentMapper.insertAttachment(attachment);
         }
@@ -71,12 +71,12 @@ public class EmailService {
         EmailMapper emailMapper = session.getMapper(EmailMapper.class);
         AttachmentMapper attachmentMapper = session.getMapper(AttachmentMapper.class);
         Email email = emailMapper.getEmailById(emailId);
-        if(email != null) {
+        if (email != null) {
             email.setAttachments(attachmentMapper.findByEmailId(emailId));
             System.out.println(email.getAttachments().toString());
         }
         session.close();
         return email;
     }
-
+}
 
