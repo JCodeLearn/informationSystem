@@ -1,352 +1,97 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page import="informationSystem.pojo.User" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ page isELIgnored="false" %>
-<%
-    response.setCharacterEncoding("UTF-8");
-    request.setCharacterEncoding("UTF-8");
+package informationSystem;
 
-    if (session.getAttribute("user") == null) {
-        response.sendRedirect("login.jsp?error=请先登录系统");
-        return;
-    }
+import informationSystem.pojo.Attachment;
+import informationSystem.pojo.Email;
+import informationSystem.pojo.User;
+import informationSystem.service.EmailService;
+import informationSystem.service.UserService;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
-    User user = (User) session.getAttribute("user");
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
-%>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>写邮件 - 简易风电子邮箱</title>
-    <style>
-        :root {
-            --primary-blue: #168BFA;
-            --gray-bg: #F5F6F8;
-            --border-color: #E0E2E5;
-            --error-red: #ff4444;
-        }
+@WebServlet("/compose")
+public class ComposeServlet extends HttpServlet {
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        body {
-            font-family: "Microsoft YaHei", sans-serif;
-            background: var(--gray-bg);
-            margin: 0;
-            padding: 20px;
-        }
+        String action = null;
+        String receiver = null;
+        String subject = null;
+        String content = null;
 
-        .compose-container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            padding: 24px;
-        }
+        User sender = (User) req.getSession().getAttribute("user");
 
-        .form-group {
-            margin-bottom: 20px;
-        }
+        List< Attachment> attachments = new ArrayList<>();
+        if(ServletFileUpload.isMultipartContent(req)) {
+            DiskFileItemFactory factory = new DiskFileItemFactory();
+            ServletFileUpload upload = new ServletFileUpload(factory);
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: 500;
-        }
-
-        input[type="text"],
-        textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            font-size: 14px;
-        }
-
-        textarea {
-            height: 300px;
-            resize: vertical;
-        }
-
-       .file-card {
-           display: flex;
-           align-items: center;
-           padding: 8px;
-           background: #f8f9fa;
-           border-radius: 4px;
-           margin: 4px 0;
-           width: 100%; 
-           box-sizing: border-box;
-       }
-
-       .file-name {
-           flex: 1;
-           margin: 0 12px;
-           color: black;
-           overflow: hidden;
-           cursor: pointer;
-           text-overflow: ellipsis;
-           white-space: nowrap; 
-           min-width: 200px; 
-       }
-
-        .file-size {
-            color: #666;
-            font-size: 0.9em;
-        }
-
-        .remove-file {
-            color: var(--error-red);
-            cursor: pointer;
-            margin-left: 8px;
-        }
-
-        .submit-btn {
-            background: var(--primary-blue);
-            color: white;
-            padding: 10px 30px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            float: right;
-            transition: background 0.2s;
-        }
-
-        .submit-btn:hover {
-            background: #127AD8;
-        }
-
-        .error-message {
-            color: var(--error-red);
-            margin-bottom: 15px;
-            padding: 10px;
-            background: #ffecec;
-            border-radius: 4px;
-        }
-
-        .error-hint {
-            color: var(--error-red);
-            font-size: 0.9em;
-            margin-top: 5px;
-            display: none;
-        }
-
-        .file-input button {
-            padding: 8px 16px;
-            background: #f0f2f5;
-            border: 1px dashed var(--border-color);
-            border-radius: 4px;
-            cursor: pointer;
-        }
-    </style>
-</head>
-<body>
-    <div class="compose-container">
-        <h1 style="margin-bottom:24px;">写信</h1>
-
-        <c:if test="${not empty error}">
-            <div class="error-message">ERROR: ${error}</div>
-        </c:if>
-
-        <form action="compose" method="post" enctype="multipart/form-data">
-            <%-- 添加隐藏字段 --%>
-            <input type="hidden" name="action" value="send" id="actionField">
-            <%-- 收件人输入 --%>
-            <div class="form-group">
-                <label>收件人：</label>
-                <input type="text"
-                       name="receiver"
-                       required
-                       placeholder="请输入收件人邮箱（输入1-10位字母/数字）"
-                       pattern="^[a-zA-Z0-9]{1,10}$"
-                       title="用户名必须为1-10位字母或数字"
-                       id="receiverInput">
-                <div class="error-hint" id="receiverError"></div>
-            </div>
-
-            <%-- 邮件主题 --%>
-            <div class="form-group">
-                <label>主题：</label>
-                <input type="text"
-                       name="subject"
-                       required
-                       maxlength="100"
-                       placeholder="请输入邮件主题">
-            </div>
-
-            <%-- 邮件内容 --%>
-            <div class="form-group">
-                <label>内容：</label>
-                <textarea name="content"
-                          required
-                          placeholder="编写邮件内容..."></textarea>
-            </div>
-
-            <%-- 附件上传 --%>
-            <div class="form-group">
-                <label>附件：</label>
-                <div class="file-input">
-                    <button type="button" onclick="document.getElementById('fileInput').click()">
-                         添加附件（最多5个，每个≤10MB）
-                    </button>
-                    <input type="file"
-                           name="attachments"
-                           multiple
-                           id="fileInput"
-                           style="display:none;">
-                </div>
-                <div id="fileList"></div>
-            </div>
-
-            <%-- 操作按钮 --%>
-            <div style="display: flex; justify-content: flex-end; gap: 10px; padding-top: 20px;">
-                <button type="button"
-                        class="submit-btn"
-                        onclick="saveDraft()"
-                        style="background:#666;">
-                    保存草稿
-                </button>
-                <button type="submit" class="submit-btn">发送邮件</button>
-            </div>
-        </form>
-    </div>
-
-<script>
-    // 全局变量用于跟踪已选择的文件
-    let selectedFiles = [];
-
-    // 用户名实时验证（1-10位字母数字）
-    const receiverInput = document.getElementById('receiverInput');
-    const receiverError = document.getElementById('receiverError');
-
-    receiverInput.addEventListener('input', () => {
-        const value = receiverInput.value.trim();
-        const isValid = /^[a-zA-Z0-9]{1,10}$/.test(value);
-
-        receiverError.textContent = isValid ? "" : "必须为1-10位字母/数字";
-        receiverError.style.display = isValid ? "none" : "block";
-    });
-
-    // 文件上传处理
-    document.getElementById('fileInput').addEventListener('change', function(e) {
-        const newFiles = Array.from(this.files);
-        console.log("New files selected:", newFiles);
-
-        // 合并新文件到已选文件列表
-        const mergedFiles = [...selectedFiles, ...newFiles];
-
-        // 去重（根据文件名+大小+类型）
-        const uniqueFiles = [];
-        const seen = new Set();
-        for (const file of mergedFiles) {
-            const key = file.name + file.size + file.type;
-            if (!seen.has(key)) {
-                seen.add(key);
-                uniqueFiles.push(file);
+            try {
+                for(FileItem item : upload.parseRequest(req)) {
+                    if(!item.isFormField()) {
+                        Attachment attachment = new Attachment();
+                        attachment.setFileName(item.getName());
+                        attachment.setFileType(item.getContentType());
+                        attachment.setFileData(item.get());
+                        attachments.add(attachment);
+                    } else {
+                        switch (item.getFieldName()) {
+                            case "action":
+                                action = item.getString("UTF-8");
+                                break;
+                            case "receiver":
+                                receiver = item.getString("UTF-8");
+                                break;
+                            case "subject":
+                                subject = item.getString("UTF-8");
+                                break;
+                            case "content":
+                                content = item.getString("UTF-8");
+                                break;
+                        }
+                    }
+                }
+            } catch (FileUploadException e) {
+                e.printStackTrace();
             }
         }
 
-        // 检查文件数量
-        if (uniqueFiles.length > 5) {
-            alert('最多选择5个文件');
-            selectedFiles = uniqueFiles.slice(0, 5); 
-        } else {
-            selectedFiles = uniqueFiles;
-        }
-
-        // 过滤大小超限文件
-        selectedFiles = selectedFiles.filter(file => {
-            if (file.size > 10 * 1024 * 1024) {
-                alert(`文件 ${file.name} 超过10MB限制`);
-                return false;
-            }
-            return true;
-        });
-
-        // 更新文件输入框
-        const dt = new DataTransfer();
-        selectedFiles.forEach(file => dt.items.add(file));
-        this.files = dt.files;
-
-        console.log("Merged selectedFiles:", selectedFiles);
-        // 渲染文件列表
-        renderFileList();
-    });
-
-    // 渲染文件列表到页面
-    function renderFileList() {
-        const fileList = document.getElementById('fileList');
-        fileList.innerHTML = ''; // 清空旧内容
-
-        selectedFiles.forEach((file, index) => {
-            const sizeInMB = (file.size / 1024 / 1024).toFixed(2).toString();
-            console.log("sizeInMB: ", sizeInMB);
-            // 创建文件卡片
-            const cardElement = document.createElement('div');
-            cardElement.classList.add('file-card');
-
-            // 文件名
-            const fileNameElement = document.createElement('div');
-            fileNameElement.classList.add('file-name');
-            fileNameElement.textContent = file.name;
-            cardElement.appendChild(fileNameElement);
-
-            // 文件大小
-            const fileSizeElement = document.createElement('div');
-            fileSizeElement.classList.add('file-size');
-            fileSizeElement.textContent = (sizeInMB + ' MB');
-            cardElement.appendChild(fileSizeElement);
-
-            // 删除按钮
-            const removeButton = document.createElement('div');
-            removeButton.classList.add('remove-file');
-            removeButton.textContent = '✖';
-            removeButton.onclick = () => removeFile(index);
-            cardElement.appendChild(removeButton);
-
-            // 追加到文件列表
-            fileList.appendChild(cardElement);
-        });
-    }
-
-    // 删除指定文件
-    function removeFile(index) {
-        selectedFiles.splice(index, 1); // 移除文件
-
-        // 更新文件输入框
-        const input = document.getElementById('fileInput');
-        const dt = new DataTransfer();
-        selectedFiles.forEach(file => dt.items.add(file));
-        input.files = dt.files;
-
-        renderFileList(); // 重新渲染
-    }
-
-    // 保存草稿
-    function saveDraft() {
-        document.getElementById('actionField').value = 'draft';
-        document.querySelector('form').submit();
-    }
-
-    document.querySelector('form').addEventListener('submit', function(e) {
-        if (!/^[a-zA-Z0-9]{1,10}$/.test(receiverInput.value.trim())) {
-            e.preventDefault();
-            receiverError.style.display = 'block';
-            receiverInput.focus();
-            return;
-        }
-
-        for(let file of selectedFiles) {
-            if(file.size > 10 * 1024 * 1024) {
-                e.preventDefault();
-                alert('存在超过10MB限制的文件');
+        Email email = new Email();
+        email.setSenderId(sender.getId());
+        UserService userService = new UserService();
+        User receiverUser = userService.findByUsername(receiver);
+        if(receiverUser == null) {
+            if(!("draft".equals(action))) {
+                req.setAttribute("error", "发送失败，不存在该用户！");
+                req.getRequestDispatcher("/compose.jsp").forward(req, resp);
                 return;
             }
+            email.setReceiverId(null);
+        } else {
+            email.setReceiverId(receiverUser.getId());
         }
-    });
+        email.setSubject(subject);
+        email.setContent(content);
+        EmailService emailService = new EmailService();
 
-</script>
-</body>
-</html>
-
+        if("draft".equals(action)) {
+            emailService.saveDraft(email);
+            //这个后面需要重定向到草稿箱
+        } else {
+            //这个后面需要重定向到发送箱
+        }
+    }
+}
 
