@@ -1,6 +1,6 @@
 package informationSystem.mapper;
 
-import informationSystem.pojo.Email;
+import informationSystem.pojo.*;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

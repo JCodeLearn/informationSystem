@@ -2,9 +2,7 @@ package informationSystem.service;
 
 import informationSystem.mapper.AttachmentMapper;
 import informationSystem.mapper.EmailMapper;
-import informationSystem.pojo.Attachment;
-import informationSystem.pojo.Contact;
-import informationSystem.pojo.Email;
+import informationSystem.pojo.*;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;

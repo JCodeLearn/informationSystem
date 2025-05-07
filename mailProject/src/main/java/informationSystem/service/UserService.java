@@ -1,7 +1,7 @@
 package informationSystem.service;
 
 import informationSystem.mapper.UserMapper;
-import informationSystem.pojo_.User;
+import informationSystem.pojo.*;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;

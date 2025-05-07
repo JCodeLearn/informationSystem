@@ -1,8 +1,8 @@
 package informationSystem.mapper;
 
-import informationSystem.pojo.User;
 
 import java.util.Map;
+import informationSystem.pojo.*;
 
 public interface UserMapper {
     User findByUsername(String username);
