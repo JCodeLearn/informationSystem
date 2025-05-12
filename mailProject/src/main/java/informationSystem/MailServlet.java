@@ -33,16 +33,18 @@ public class MailServlet extends HttpServlet {
             case "sent":
                 emails = emailService.getSentEmails(user.getId());
                 break;
+            case "draft":
+                emails = emailService.getDraftEmails(user.getId());
+                break;
             default:
                 emails = Collections.emptyList();
         }
 
         String specialAction = new String(action);
         req.getSession().setAttribute("specialAction", specialAction);
-        List<Contact> contacts = emailService.getRecentContacts(user.getId());
-        req.getSession().setAttribute("contacts", contacts);
         req.getRequestDispatcher("/emailList.jsp").forward(req, resp);
     }
 
 }
+
 
