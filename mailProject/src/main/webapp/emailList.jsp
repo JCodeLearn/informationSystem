@@ -25,6 +25,18 @@
     <c:choose>
         <%-- 收件箱 --%>
         <%-- 草稿箱 --%>
+        <c:when test="${specialAction eq 'draft'}">
+               <c:forEach items="${emails}" var="email">
+                       <a href="draft?id=${email.id}" class="email-item">
+                        <div class="email-header">
+                         <span class="subject">${email.subject}</span>
+                          <span class="time">${email.sendTime}</span>
+        <%--               <span class="time"><fmt:formatDate value="${email.sendTime}" pattern="yyyy-MM-dd HH:mm"/></span>   --%>
+                        </div>
+                     <div class="receiver">草稿（未发送）</div>
+                  </a>
+              </c:forEach>
+          </c:when>
         <%-- 已发送 --%>
         <c:when test="${specialAction eq 'sent'}">
             <c:forEach items="${emails}" var="email">
