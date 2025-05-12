@@ -131,4 +131,37 @@ public class UserService {
         }
     }
 
+    // 更新头像
+    public void updateAvatar(int userId, byte[] avatar, String contentType) {
+        try (SqlSession session = sqlSessionFactory.openSession(true)) {
+            UserMapper mapper = session.getMapper(UserMapper.class);
+            Map<String, Object> params = new HashMap<>();
+            params.put("id", userId);
+            params.put("avatar", avatar);
+            params.put("avatarType", contentType);
+            mapper.updateAvatar(params);
+        }
+    }
+
+    //识别是否非法密码
+    public boolean validatePassword(Integer userId, String password) {
+        SqlSession session = sqlSessionFactory.openSession(true);
+        UserMapper mapper = session.getMapper(UserMapper.class);
+        String oldPassword = mapper.getPasswordById(userId);
+        session.close();
+        if(oldPassword != null && oldPassword.equals(password)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    //更新密码
+    public void updatePassword(Integer userId, String password) {
+        SqlSession session = sqlSessionFactory.openSession(true);
+        UserMapper mapper = session.getMapper(UserMapper.class);
+        mapper.updatePassword(userId, password);
+        session.close();
+    }
+
 }
