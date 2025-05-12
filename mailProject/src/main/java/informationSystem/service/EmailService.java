@@ -86,5 +86,13 @@ public class EmailService {
         session.close();
         return emails;
     }
+
+    public List<Email> getDraftEmails(Integer senderId) {
+        SqlSession session = sqlSessionFactory.openSession(true);
+        EmailMapper mapper = session.getMapper(EmailMapper.class);
+        List<Email> emails = mapper.getEmailsBySenderAndStatus(senderId, "draft");
+        session.close();
+        return emails;
+    }
 }
 

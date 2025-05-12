@@ -22,4 +22,16 @@
         WHERE id = #{id}
     </update>
 
+    <select id="getPasswordById" resultType="String">
+        select password
+        from Users
+        where id = #{userId}
+    </select>
+
+    <update id="updatePassword">
+        update Users
+        set password = #{passWord}
+        where id = #{userId}
+    </update>
+
 </mapper>
