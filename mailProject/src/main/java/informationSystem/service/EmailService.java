@@ -94,5 +94,13 @@ public class EmailService {
         session.close();
         return emails;
     }
+
+    public Email getEmailById(Integer id) {
+        SqlSession session = sqlSessionFactory.openSession(true);
+        EmailMapper mapper = session.getMapper(EmailMapper.class);
+        Email email = mapper.getEmailById(id);
+        session.close();
+        return email;
+    }
 }
 
