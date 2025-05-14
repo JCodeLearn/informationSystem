@@ -143,5 +143,13 @@ public class EmailService {
         mapper.markAsRead(emailId);
         session.close();
     }
+
+    public List<Contact> getRecentContacts(Integer userId) {
+        SqlSession session = sqlSessionFactory.openSession(true);
+        EmailMapper mapper = session.getMapper(EmailMapper.class);
+        List<Contact> contacts = mapper.getRecentContact(userId);
+        session.close();
+        return contacts;
+    }
 }
 
