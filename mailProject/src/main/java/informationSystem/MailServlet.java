@@ -48,6 +48,14 @@ public class MailServlet extends HttpServlet {
 
         String specialAction = new String(action);
         req.getSession().setAttribute("specialAction", specialAction);
+        if(!"contacts".equals(action)){
+            req.getSession().setAttribute("emails", emails);
+            System.out.println("hello " + emails);
+        } else {
+            List<Contact> contacts = emailService.getRecentContacts(user.getId());
+            req.getSession().setAttribute("contacts", contacts);
+        }
+
         req.getRequestDispatcher("/emailList.jsp").forward(req, resp);
     }
 
