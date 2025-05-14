@@ -15,6 +15,11 @@ public class EmailDetailServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int emailId = Integer.parseInt(req.getParameter("id"));
         EmailService emailService = new EmailService();
+
+        String specialAction = req.getParameter("takeAction");
+        if("readAction".equals(specialAction)) {
+            emailService.markAsRead(emailId);
+        }
         Email email = emailService.getEmailWithAttachments(emailId);
         req.getSession().setAttribute("email", email);
         System.out.println(email);
@@ -22,4 +27,5 @@ public class EmailDetailServlet extends HttpServlet {
     }
 
 }
+
 

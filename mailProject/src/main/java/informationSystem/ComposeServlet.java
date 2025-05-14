@@ -30,6 +30,7 @@ public class ComposeServlet extends HttpServlet {
         String receiver = null;
         String subject = null;
         String content = null;
+        Integer draftId = null;
 
         User sender = (User) req.getSession().getAttribute("user");
 
@@ -60,6 +61,10 @@ public class ComposeServlet extends HttpServlet {
                             case "content":
                                 content = item.getString("UTF-8");
                                 break;
+                            //新增加内容
+                            case "draftId":
+                                draftId = Integer.parseInt(item.getString("UTF-8"));
+                                break;
                         }
                     }
                 }
@@ -86,12 +91,39 @@ public class ComposeServlet extends HttpServlet {
         email.setContent(content);
         EmailService emailService = new EmailService();
 
+        String redirectUrl;
         if("draft".equals(action)) {
-            emailService.saveDraft(email);
-            //这个后面需要重定向到草稿箱
+            if(draftId != null) {
+                email.setId(draftId);
+                email.setStatus("draft");
+                emailService.updateDraft(email);
+            } else {
+                emailService.saveDraft(email);
+            }
+            //重定向到草稿箱
+            redirectUrl = "/welcome.jsp?action=draft";
         } else {
-            //这个后面需要重定向到发送箱
+            if(draftId != null) {
+                email.setId(draftId);
+                email.setStatus("sent");
+                email.setSendTime(new Date());
+                emailService.makeDraftSent(email, attachments);
+            } else {
+                emailService.sendEmail(email, attachments);
+            }
+            if(receiverUser != null && UserService.isUserOnline(receiverUser.getId())) {
+                HttpSession receiverSession = UserService.getUserSession(receiverUser.getId());
+                if(receiverSession != null) {
+                    receiverSession.setAttribute("newMailCome", true);
+                }
+            }
+            //重定向到发送箱
+            redirectUrl = "/welcome.jsp?action=sent";
         }
+
+        resp.sendRedirect(req.getContextPath() + redirectUrl);
+
     }
 }
+
 
