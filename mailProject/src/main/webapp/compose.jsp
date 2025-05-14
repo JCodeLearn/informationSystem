@@ -215,6 +215,9 @@
         <form action="compose" method="post" enctype="multipart/form-data">
             <%-- 添加隐藏字段 --%>
             <input type="hidden" name="action" value="send" id="actionField">
+            <c:if test="${not empty draft}">
+            	<input type="hidden" name="draftId" value="${draft.id}">
+            </c:if>
             <%-- 收件人输入 --%>
             <div class="form-group">
                 <label>收件人：</label>
@@ -407,6 +410,23 @@
                 return;
             }
         }
+    });
+    // 页面加载时填充草稿数据
+    window.addEventListener('DOMContentLoaded', () => {
+        <c:if test="${not empty draft}">
+            // 填充表单字段
+            // 安全填充接收人（允许receiver为空）
+            document.querySelector('[name="receiver"]').value =
+                '${not empty draft.receiverUsername ? fn:escapeXml(draft.receiverUsername) : ""}';
+
+            // 安全填充主题（允许subject为空）
+            document.querySelector('[name="subject"]').value =
+                '${not empty draft.subject ? fn:escapeXml(draft.subject) : ""}';
+
+            // 安全填充内容
+            document.querySelector('[name="content"]').value =
+                '${not empty draft.content ? fn:escapeXml(draft.content) : ""}';
+        </c:if>
     });
 
 </script>
