@@ -280,6 +280,28 @@
                         contentPane.innerHTML = `<div class="error">内容加载失败</div>`;
                     });
         }
+
+ setInterval(checkNewMails, 30000);
+
+         function checkNewMails() {
+             fetch('/mail?action=checkNew') // 发送检查请求
+                 .then(response => response.json()) // 解析JSON响应
+                 .then(data => {
+                     if(data.hasNew) { // 根据响应结果判断
+                         showNewMailAlert(); // 显示通知
+                         loadContent('inbox'); // 刷新收件箱列表
+                     }
+                 });
+         }
+
+         function showNewMailAlert() {
+             const alertDiv = document.createElement('div');
+             alertDiv.style = "position:fixed; top:20px; right:20px; background:#4CAF50; color:white; padding:15px;";
+             alertDiv.textContent = "请查收新邮件！";
+             document.body.appendChild(alertDiv);
+             setTimeout(() => alertDiv.remove(), 5000); // 5秒后自动消失
+         }
+
     </script>
 </body>
 </html>
