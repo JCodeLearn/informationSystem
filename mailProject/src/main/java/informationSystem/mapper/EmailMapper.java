@@ -13,5 +13,6 @@ public interface EmailMapper {
     void updateEmail(Email email);
     List<Email> getReceivedEmails(Integer receiverId);
     void markAsRead(Integer emailId);
+    List<Contact> getRecentContact(Integer userId);
 }
 
