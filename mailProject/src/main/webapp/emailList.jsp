@@ -24,6 +24,34 @@
     <%-- 根据specialAction类型来选择不同的 --%>
     <c:choose>
         <%-- 收件箱 --%>
+         <c:when test="${specialAction eq 'inbox'}">
+            <c:forEach items="${emails}" var="email">
+        <a href="emailDetail?id=${email.id}&takeAction=readAction" class="email-item">
+            <div class="email-header">
+                <%-- 显示未读标识 --%>
+                <c:if test="${email.isRead == 0}">
+                    <span class="unread-dot" style="
+                        display: inline-block;
+                        width: 8px;
+                        height: 8px;
+                        background: #e74c3c;
+                        border-radius: 50%;
+                        margin-right: 8px;
+                    "></span>
+                </c:if>
+                <span class="subject">${email.subject}</span>
+                <span class="time">${email.sendTime}</span>
+<%--                    <span class="time">    --%>
+<%--                      <fmt:formatDate value="${email.sendTime}" pattern="yyyy-MM-dd HH:mm"/>    --%>
+<%--                       </span>                                                                        --%>
+            </div>
+            <div class="receiver">
+                发件人：${email.senderUsername}
+             </div>
+         </a>
+      </c:forEach>
+   </c:when>
+
         <%-- 草稿箱 --%>
         <c:when test="${specialAction eq 'draft'}">
                <c:forEach items="${emails}" var="email">
