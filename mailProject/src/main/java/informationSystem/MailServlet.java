@@ -42,6 +42,9 @@ public class MailServlet extends HttpServlet {
             case "draft":
                 emails = emailService.getDraftEmails(user.getId());
                 break;
+            case "inbox":
+                emails =emailService.getReceivedEmails(user.getId());
+                break;
             default:
                 emails = Collections.emptyList();
         }
