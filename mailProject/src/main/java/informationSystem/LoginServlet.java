@@ -27,6 +27,8 @@ public class LoginServlet extends HttpServlet {
                 // 登录逻辑
                 if (password.equals(existingUser.getPassword())) {
                     request.getSession().setAttribute("user", existingUser);
+                    //实现用户在线管理
+                    UserService.addOnlineUser(existingUser, request.getSession());
                     response.sendRedirect("welcome.jsp");
                 } else {
                     request.setAttribute("error", "密码错误");
@@ -39,6 +41,7 @@ public class LoginServlet extends HttpServlet {
                 newUser.setPassword(password);
                 if (userService.register(newUser)) {
                     request.getSession().setAttribute("user", newUser);
+                    UserService.addOnlineUser(newUser, request.getSession());
                     response.sendRedirect("welcome.jsp");
                 } else {
                     request.setAttribute("error", "注册失败，已存在该用户！");

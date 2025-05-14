@@ -102,5 +102,46 @@ public class EmailService {
         session.close();
         return email;
     }
+
+    public boolean updateDraft(Email email) {
+        SqlSession session = sqlSessionFactory.openSession(true);
+        EmailMapper mapper = session.getMapper(EmailMapper.class);
+        mapper.updateEmail(email);
+        session.close();
+        return true;
+    }
+
+    public void makeDraftSent(Email email, List<Attachment> attachments) {
+        SqlSession session = sqlSessionFactory.openSession(false);
+        EmailMapper emailMapper = session.getMapper(EmailMapper.class);
+        AttachmentMapper attachmentMapper = session.getMapper(AttachmentMapper.class);
+
+        //更新邮件
+        updateDraft(email);
+
+        //处理附件
+        for(Attachment attachment : attachments) {
+            attachment.setEmailId(email.getId());
+            attachmentMapper.insertAttachment(attachment);
+        }
+
+        session.commit();
+        session.close();
+    }
+
+    public List<Email> getReceivedEmails(int receiverId) {
+        SqlSession session = sqlSessionFactory.openSession(true);
+        EmailMapper mapper = session.getMapper(EmailMapper.class);
+        List<Email> emails = mapper.getReceivedEmails(receiverId);
+        session.close();
+        return emails;
+    }
+
+    public void markAsRead(Integer emailId) {
+        SqlSession session = sqlSessionFactory.openSession(true);
+        EmailMapper mapper = session.getMapper(EmailMapper.class);
+        mapper.markAsRead(emailId);
+        session.close();
+    }
 }
 

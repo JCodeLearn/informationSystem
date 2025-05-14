@@ -9,10 +9,12 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class UserService {
     // 日志记录器
@@ -33,6 +35,26 @@ public class UserService {
             throw new RuntimeException("系统初始化失败", e);
         }
     }
+
+    //实现用户在线管理
+    private static final Map<Integer, HttpSession> onlineUsers = new ConcurrentHashMap<>();
+
+    public static void addOnlineUser(User user, HttpSession session) {
+        onlineUsers.put(user.getId(), session);
+    }
+
+    public static void removeOnlineUser(Integer userId) {
+        onlineUsers.remove(userId);
+    }
+
+    public static boolean isUserOnline(Integer userId) {
+        return onlineUsers.containsKey(userId);
+    }
+
+    public static HttpSession getUserSession(Integer userId) {
+        return onlineUsers.get(userId);
+    }
+
 
     /**
      * 用户登录验证
