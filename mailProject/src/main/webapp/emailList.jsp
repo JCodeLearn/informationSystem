@@ -81,6 +81,31 @@
             </c:if>
         </c:when>
         <%-- 通讯录 --%>
+         <c:when test="${specialAction eq 'contacts'}">
+            <div class="contact-header">
+                <h3>最近联系人</h3>
+          </div>
+           <c:choose>
+            <c:when test="${not empty contacts}">
+                <c:forEach items="${contacts}" var="contact">
+                    <div class="contact-item">
+                        <div class="contact-info">
+                            <span class="contact-name">${contact.contactName}</span>
+                            <span class="contact-time">
+                                <fmt:formatDate
+                                    value="${contact.lastContactTime}"
+                                    pattern="yyyy-MM-dd HH:mm"/>
+                            </span>
+                        </div>
+                    </div>
+                </c:forEach>
+            </c:when>
+            <c:otherwise>
+                <div class="no-contacts">暂无联系人记录</div>
+            </c:otherwise>
+        </c:choose>
+    </c:when>
+
     </c:choose>
 
 </div>
