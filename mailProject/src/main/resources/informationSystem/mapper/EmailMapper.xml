@@ -21,4 +21,32 @@
         order by send_time desc
     </select>
 
+    <update id="updateEmailStatus">
+        update Emails
+        set status = #{status}
+        where id = #{id};
+    </update>
+
+    <update id="updateEmail" parameterType="informationSystem.pojo.Email">
+        UPDATE Emails SET
+        receiver_id = #{receiverId},
+        subject = #{subject},
+        content = #{content},
+        send_time = #{sendTime},
+        status = #{status}
+        WHERE id = #{id}
+    </update>
+
+    <select id="getReceivedEmails" resultType="informationSystem.pojo.Email">
+        select a.id id, a.sender_id senderId, a.receiver_id receiverId, a.subject subject, a.content content, a.send_time sendTime, a.is_read isRead, a.status status, b.username senderUsername
+        from Emails a, Users b
+        where a.sender_id = b.id and a.receiver_id = #{receiverId} and a.status = 'sent'
+        order by send_time desc;
+    </select>
+
+    <update id="markAsRead">
+        update Emails
+        set is_read = 1 where id = #{emailId}
+    </update>
+
 </mapper>
