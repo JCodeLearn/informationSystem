@@ -49,4 +49,19 @@
         set is_read = 1 where id = #{emailId}
     </update>
 
+    <select id="getRecentContact" resultType="informationSystem.pojo.Contact">
+        select contactId, contactName, max(lastContactTime) lastContactTime
+        from
+        ((select b.id contactId, b.username contactName, max(a.send_time) lastContactTime
+        from Emails a, Users b
+        where a.sender_id = #{userId} and a.receiver_id = b.id
+        group by b.id, b.username)
+        union all
+        (select b.id contactId, b.username contactName, max(a.send_time) lastContactTime
+        from Emails a, Users b
+        where a.receiver_id = #{userId} and a.sender_id = b.id
+        group by b.id, b.username)) whatWeNeed
+        group by contactId, contactName
+    </select>
+
 </mapper>
