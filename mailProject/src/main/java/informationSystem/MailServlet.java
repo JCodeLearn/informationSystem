@@ -1,4 +1,5 @@
 package informationSystem;
+import informationSystem.pojo.Contact;
 import informationSystem.pojo.Email;
 import informationSystem.pojo.User;
 import informationSystem.service.EmailService;

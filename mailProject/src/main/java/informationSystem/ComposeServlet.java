@@ -73,6 +73,9 @@ public class ComposeServlet extends HttpServlet {
             }
         }
 
+        //移除域元素中的草稿标记
+        req.removeAttribute("draft");
+
         Email email = new Email();
         email.setSenderId(sender.getId());
         UserService userService = new UserService();

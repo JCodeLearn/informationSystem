@@ -18,5 +18,7 @@
     <mappers>
         <!--加载sql映射文件-->
         <mapper resource="informationSystem/mapper/UserMapper.xml"/>
+        <mapper resource="informationSystem/mapper/EmailMapper.xml"/>
+        <mapper resource="informationSystem/mapper/AttachmentMapper.xml"/>
     </mappers>
 </configuration>

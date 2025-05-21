@@ -165,6 +165,91 @@
             height: 100%;
             width: 100%;
          }
+
+         * 邮件列表项 */
+         .email-list {
+             padding: 1rem;
+         }
+
+         .email-item {
+             display: block;
+             padding: 1rem;
+             margin-bottom: 1rem;
+             background: #fff;
+             border-radius: 6px;
+             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+             text-decoration: none;
+             color: #333;
+             transition: transform 0.2s;
+         }
+
+         .email-item:hover {
+             transform: translateX(5px);
+         }
+
+         .email-header {
+             display: flex;
+             justify-content: space-between;
+             margin-bottom: 0.5rem;
+         }
+
+         .subject {
+             font-weight: 500;
+             color: var(--primary-color);
+         }
+
+         .time {
+             color: #666;
+             font-size: 0.9em;
+         }
+
+         .receiver {
+             color: #666;
+             font-size: 0.9em;
+         }
+
+         .no-emails {
+             padding: 2rem;
+             text-align: center;
+             color: #999;
+         }
+
+         /* 通讯录专用样式 */
+         .contact-header {
+             padding: 1rem;
+             border-bottom: 1px solid #e0e0e0;
+             margin-bottom: 1rem;
+         }
+
+         .contact-item {
+             padding: 1rem;
+             margin-bottom: 0.5rem;
+             background: #fff;
+             border-radius: 6px;
+             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+         }
+
+         .contact-info {
+             display: flex;
+             justify-content: space-between;
+             align-items: center;
+         }
+
+         .contact-name {
+             font-weight: 500;
+             color: #1a73e8;
+         }
+
+         .contact-time {
+             color: #666;
+             font-size: 0.9em;
+         }
+
+         .no-contacts {
+             padding: 2rem;
+             text-align: center;
+             color: #999;
+         }
     </style>
 </head>
 <body>
@@ -186,7 +271,7 @@
                  alt="用户头像"
                  class="user-avatar"
                  onerror="this.src='images/default-avatar.jpeg">
-            <span>${user.username}</span>
+            <span class="username" onclick="location.href='change-password'">${user.username}</span>
         </div>
     </div>
 
@@ -231,16 +316,7 @@
         <main class="content-area">
             <div class="content-pane" id="contentPane">
                 <%-- 默认显示收件箱内容 --%>
-                <h2>收件箱</h2>
-                <div class="email-list">
-                    <%-- 邮件列表动态内容 --%>
-                    <c:forEach items="${emails}" var="email">
-                        <div class="email-item">
-                            <div class="sender">${email.sender}</div>
-                            <div class="subject">${email.subject}</div>
-                            <div class="preview">${email.preview}...</div>
-                        </div>
-                    </c:forEach>
+
                 </div>
             </div>
         </main>
